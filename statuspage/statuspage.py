@@ -144,7 +144,7 @@ def run_upgrade(name, token, org):
             content = f.read()
             if template in files:
                 repo_template = repo.get_contents(
-                    path="/" + template,
+                    template,
                     ref=head_sha,
                 )
                 if not is_same_content(
@@ -152,7 +152,7 @@ def run_upgrade(name, token, org):
                     base64.b64decode(repo_template.content)
                 ):
                     repo.update_file(
-                        path="/" + template,
+                        path=template,
                         sha=repo_template.sha,
                         message="upgrade",
                         content=content,
@@ -160,7 +160,7 @@ def run_upgrade(name, token, org):
                     )
             else:
                 repo.create_file(
-                    path="/" + template,
+                    path=template,
                     message="upgrade",
                     content=content,
                     branch="gh-pages"
@@ -177,7 +177,7 @@ def run_update(name, token, org):
 
     # get the template from the repo
     template_file = repo.get_contents(
-        path="/template.html",
+        path="template.html",
         ref=sha
     )
 
@@ -196,7 +196,7 @@ def run_update(name, token, org):
     try:
         # get the index.html file, we need the sha to update it
         index = repo.get_contents(
-            path="/index.html",
+            path="index.html",
             ref=sha,
         )
 
@@ -205,7 +205,7 @@ def run_update(name, token, org):
             return False
 
         repo.update_file(
-            path="/index.html",
+            path="index.html",
             sha=index.sha,
             message="update index",
             content=content,
@@ -214,7 +214,7 @@ def run_update(name, token, org):
     except UnknownObjectException:
         # index.html does not exist, create it
         repo.create_file(
-            path="/index.html",
+            path="index.html",
             message="initial",
             content=content,
             branch="gh-pages",
